@@ -10,7 +10,8 @@ const UserSchema = new mongoose.Schema({
   subscription_status: { type: String, enum: ['active', 'inactive'], default: 'inactive' },
   subscription_start: Date,
   subscription_end: Date,
-  last_login_at: Date
+  last_login_at: Date,
+  active_device_id: { type: String, default: null }
 }, baseOptions);
 
 const CourseSchema = new mongoose.Schema({ title: { type: String, required: true, unique: true } }, baseOptions);

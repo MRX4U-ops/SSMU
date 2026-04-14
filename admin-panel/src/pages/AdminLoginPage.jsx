@@ -5,7 +5,16 @@ export default function AdminLoginPage({ onLoggedIn }) {
   const [email, setEmail] = useState('admin@ssmu.edu');
 
   const login = async () => {
-    const { data } = await api.post('/auth/google-login', { email, name: 'Admin User', google_id: 'admin-google-id' });
+    const deviceId = `web_admin_${navigator.userAgent.slice(0, 20)}`;
+    api.defaults.headers.common['x-device-id'] = deviceId;
+
+    const { data } = await api.post('/auth/google-login', {
+      email,
+      name: 'Admin User',
+      google_id: 'admin-google-id',
+      device_id: deviceId
+    });
+
     setToken(data.token);
     onLoggedIn(data.user);
   };

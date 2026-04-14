@@ -9,6 +9,7 @@ This repository contains a scalable 3-layer system for **SSMU MCQs**:
 ## Core Product Coverage
 
 - Google/Gmail login flow (`POST /auth/google-login`) with JWT session.
+- Single-device session policy: new login invalidates previous device session for the same account.
 - 90-day subscription activation from verified payment (`INR 49`).
 - Strict learning hierarchy: Course → Subject → Module → Topic → Task Type → MCQs.
 - One-question-at-a-time MCQ engine with instant correct/incorrect + explanation.
