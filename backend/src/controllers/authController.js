@@ -1,0 +1,33 @@
+import jwt from 'jsonwebtoken';
+import { body } from 'express-validator';
+import { env } from '../config/env.js';
+import { User } from '../models/index.js';
+
+export const googleLoginValidation = [
+  body('email').isEmail(),
+  body('name').isString().notEmpty(),
+  body('google_id').isString().notEmpty(),
+  body('device_id').isString().notEmpty()
+];
+
+export async function googleLogin(req, res) {
+  const { email, name, google_id, device_id } = req.body;
+  let user = await User.findOne({ email });
+  if (!user) {
+    user = await User.create({ email, name, google_id, active_device_id: device_id });
+  }
+
+  user.name = name;
+  user.google_id = google_id;
+  user.active_device_id = device_id;
+  user.last_login_at = new Date();
+  await user.save();
+
+  const token = jwt.sign(
+    { sub: user.id, role: user.role, email: user.email, device_id },
+    env.jwtSecret,
+    { expiresIn: env.jwtExpiry }
+  );
+
+  return res.json({ token, user, active_device_id: device_id, note: 'New login invalidates previous device session.' });
+}
